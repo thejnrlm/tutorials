@@ -2,16 +2,20 @@
 
 ## Samba
 
-Entre no modo de superuser: 
+Entre no modo de superuser:
 `su -`
 
-Crie 2 diretórios, um para o "rh" e o outro para o "financeiro", mas antes vou criar uma pasta chamada “server” para centralizar os diretórios do “rh”e “financeiro”: 
-`mkdir /server
-mkdir /server/rh /server/financeiro`
+Crie 2 diretórios, um para o "rh" e o outro para o "financeiro", mas antes vou criar uma pasta chamada “server” para centralizar os diretórios do “rh”e “financeiro”:
+```
+mkdir /server
+mkdir /server/rh /server/financeiro
+```
 
 Altere as permissões dos diretórios:
-`chmod 777 -R /server/rh/
-chmod 777 -R /server/financeiro/`
+```
+chmod 777 -R /server/rh/
+chmod 777 -R /server/financeiro/
+```
 
 Instale Samba e suas dependências:
 `apt install samba samba-common`
@@ -22,14 +26,15 @@ Crie uma cópia do arquivo “smb.conf”:
 Realize as alterações abaixo no server samba:
 `nano /etc/samba/smb.conf`
 
-`[global]
+```
+[global]
    workgroup = WORKGROUP 
-   netbios name = Servidor`
+   netbios name = Servidor
 
-`####### Authentication #######
-   security = user`
+####### Authentication #######
+   security = user
 
-`[RH]
+[RH]
    path = /server/rh/
    comment = Arquivos RH
    browseable = yes
@@ -41,9 +46,9 @@ Realize as alterações abaixo no server samba:
    admin users = administrador,rh
    valid users = administrador,rh
    create mask = 0777
-   directory mask = 0777`
+   directory mask = 0777
 
-`[FINANCEIRO]
+[FINANCEIRO]
    path = /server/financeiro/
    comment = Arquivos Financeiro
    browseable = yes
@@ -55,16 +60,21 @@ Realize as alterações abaixo no server samba:
    admin users = administrador,financeiro
    valid users = administrador,financeiro
    create mask = 0777
-   directory mask = 0777`
+   directory mask = 0777
+```
 
 Reiniciar o serviço de Samba:
 `systemctl restart smbd.service nmbd.service`
 
 Criar novo usuário no Linux:
-`adduser rh
-adduser financeiro`
+```
+adduser rh
+adduser financeiro
+```
 
 Criar novo usuário no servidor Samba:
-`smbpasswd -a administrador
+```
+smbpasswd -a administrador
 smbpasswd -a rh
-smbpasswd -a financeiro`
+smbpasswd -a financeiro
+```
